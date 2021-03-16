@@ -1,0 +1,65 @@
+diff -crB contiki_save/core/dev/serial-line.c contiki_save_2/core/dev/serial-line.c
+*** contiki_save/core/dev/serial-line.c	2021-02-04 13:53:24.097656004 +0100
+--- contiki_save_2/core/dev/serial-line.c	2021-03-16 22:37:10.293685228 +0100
+***************
+*** 46,53 ****
+  #error Change SERIAL_LINE_CONF_BUFSIZE in contiki-conf.h.
+  #endif
+  
+! #define IGNORE_CHAR(c) (c == 0x0d)
+! #define END 0x0a
+  
+  static struct ringbuf rxbuf;
+  static uint8_t rxbuf_data[BUFSIZE];
+--- 46,53 ----
+  #error Change SERIAL_LINE_CONF_BUFSIZE in contiki-conf.h.
+  #endif
+  
+! #define IGNORE_CHAR(c) (c == 0x0a)
+! #define END 0x0d
+  
+  static struct ringbuf rxbuf;
+  static uint8_t rxbuf_data[BUFSIZE];
+diff -crB contiki_save/platform/avr-atmega128rfa1/contiki-main.c contiki_save_2/platform/avr-atmega128rfa1/contiki-main.c
+*** contiki_save/platform/avr-atmega128rfa1/contiki-main.c	2021-02-04 13:53:24.221656001 +0100
+--- contiki_save_2/platform/avr-atmega128rfa1/contiki-main.c	2021-03-16 22:36:44.661680557 +0100
+***************
+*** 173,199 ****
+    watchdog_init();
+    watchdog_start();
+  
+! /* The Raven implements a serial command and data interface via uart0 to a 3290p,
+!  * which could be duplicated using another host computer.
+!  */
+! #if !RF230BB_CONF_LEDONPORTE1   //Conflicts with USART0
+! #ifdef RAVEN_LCD_INTERFACE
+!   rs232_init(RS232_PORT_0, USART_BAUD_38400,USART_PARITY_NONE | USART_STOP_BITS_1 | USART_DATA_BITS_8);
+!   rs232_set_input(0,raven_lcd_serial_input);
+! #else
+!   /* Generic or slip connection on uart0 */
+!   rs232_init(RS232_PORT_0, USART_BAUD_38400,USART_PARITY_NONE | USART_STOP_BITS_1 | USART_DATA_BITS_8);
+! #endif
+! #endif
+  
+-   /* Second rs232 port for debugging or slip alternative */
+-   rs232_init(RS232_PORT_1, USART_BAUD_57600,USART_PARITY_NONE | USART_STOP_BITS_1 | USART_DATA_BITS_8);
+-   /* Redirect stdout */
+- #if RF230BB_CONF_LEDONPORTE1 || defined(RAVEN_LCD_INTERFACE)
+-   rs232_redirect_stdout(RS232_PORT_1);
+- #else
+-   rs232_redirect_stdout(RS232_PORT_0);
+- #endif
+    clock_init();
+  
+    if(MCUSR & (1<<PORF )) PRINTD("Power-on reset.\n");
+--- 173,182 ----
+    watchdog_init();
+    watchdog_start();
+  
+! rs232_init (RS232_PORT_1, USART_BAUD_19200, USART_PARITY_NONE| USART_STOP_BITS_1|USART_DATA_BITS_8);
+! rs232_set_input (RS232_PORT_1, serial_line_input_byte);
+! rs232_redirect_stdout (RS232_PORT_1);
+  
+    clock_init();
+  
+    if(MCUSR & (1<<PORF )) PRINTD("Power-on reset.\n");

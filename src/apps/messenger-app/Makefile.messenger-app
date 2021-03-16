@@ -1,0 +1,13 @@
+messenger-app_src = messenger-app.c
+
+CONTIKI=../..
+
+APPS+=servreg-hack
+APPS+=serial-shell
+APPS+=shell
+
+WITH_UIP=1
+UIP_CONF_IPV6=1
+
+include $(CONTIKI)/apps/serial-shell/Makefile.serial-shell
+include $(CONTIKI)/apps/servreg-hack/Makefile.servreg-hack
