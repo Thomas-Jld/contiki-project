@@ -5,5 +5,5 @@ cp -r src/examples/messenger contiki_save/examples/
 cp -r src/apps/messenger-app contiki_save/apps
 cd contiki_save/examples/messenger/ 
 make all
-#make all TARGET=avr-atmega128rfa1
+make all TARGET=avr-atmega128rfa1
 

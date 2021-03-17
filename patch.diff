@@ -1,22 +1,33 @@
+diff -crB contiki_save/core/dev/leds.c contiki_save_2/core/dev/leds.c
+*** contiki_save/core/dev/leds.c	2021-02-04 13:53:24.117655999 +0100
+--- contiki_save_2/core/dev/leds.c	2021-03-17 20:05:29.097547884 +0100
+***************
+*** 80,86 ****
+    inv = ~(leds ^ invert);
+    leds_invert(inv);
+  
+-   clock_delay(400);
+  
+    leds_invert(inv);
+  }
+--- 80,85 ----
 diff -crB contiki_save/core/dev/serial-line.c contiki_save_2/core/dev/serial-line.c
 *** contiki_save/core/dev/serial-line.c	2021-02-04 13:53:24.097656004 +0100
---- contiki_save_2/core/dev/serial-line.c	2021-03-16 22:37:10.293685228 +0100
+--- contiki_save_2/core/dev/serial-line.c	2021-03-17 20:18:41.397547706 +0100
 ***************
 *** 46,53 ****
+--- 46,59 ----
   #error Change SERIAL_LINE_CONF_BUFSIZE in contiki-conf.h.
   #endif
   
-! #define IGNORE_CHAR(c) (c == 0x0d)
-! #define END 0x0a
-  
-  static struct ringbuf rxbuf;
-  static uint8_t rxbuf_data[BUFSIZE];
---- 46,53 ----
-  #error Change SERIAL_LINE_CONF_BUFSIZE in contiki-conf.h.
-  #endif
-  
-! #define IGNORE_CHAR(c) (c == 0x0a)
-! #define END 0x0d
++ #if TARGET == minimal-net
+  #define IGNORE_CHAR(c) (c == 0x0d)
+  #define END 0x0a
++ #else
++ #define IGNORE_CHAR(c) (c == 0x0a)
++ #define END 0x0d
++ #endif
++ 
   
   static struct ringbuf rxbuf;
   static uint8_t rxbuf_data[BUFSIZE];
